@@ -100,7 +100,8 @@ bool ZrobRuch(char plansza[4][4], int startkol, int startrow, int endkol, int en
             return true;
         }
     }
-    else if (abs(startkol - endkol) > 1 || abs(startrow - endrow) > 1)
+    
+    if (abs(startkol - endkol) > 1 || abs(startrow - endrow) > 1)
     {
         cout << "ruch jest zbyt daleki"<< endl;
         return false;
