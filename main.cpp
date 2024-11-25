@@ -1,3 +1,4 @@
+// Tomasz Ciurkowski 203191 Elektronika i telekomunikacja Gra a la Kono (na motywach koreańskiej gry Kono)
 #include <iostream>
 
 using namespace std;
@@ -78,7 +79,6 @@ bool czypoledocelowepuste (char plansza[4][4], int endkol,int endrow)
 }
 bool czyruchpoprzekatnej(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
 {
-    if (!(startkol == endkol || startrow == endrow))
     {
         return false;
     }
