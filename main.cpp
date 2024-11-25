@@ -2,9 +2,9 @@
 
 using namespace std;
 
-void wyswietlplan(char plansza[4][4]) //funkcja rysująca planszę 
+void wyswietlplan(char plansza[4][4]) //funkcja rysująca plansze
 {
-    int row = 4; // zmienna wyświetlająca rząd 
+    int row = 4;
     cout << " \xc9\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xbb" << endl;
     for (int i = 0; i < 4; i++)
     {
@@ -21,13 +21,13 @@ void wyswietlplan(char plansza[4][4]) //funkcja rysująca planszę
         row--;
     }
     cout << " \xc8\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xbc" << endl;
-    cout << "   A   B   C   D"<< endl; // podpisanie kolumn 
+    cout << "   A   B   C   D"<< endl;
 }
 
 bool czypoprawnedane(char ruch[]) //funkcja sprawdzająca poprawność wprowadzanych danych 
 {
     int i = 0;
-    while (ruch[i] != '\0') i++;  // sprawdzanie długości wprowadzonego ciągu znaków
+    while (ruch[i] != '\0') i++;  // sprawdzanie długości wprowadzonego ciagu znaków
     if (i != 5 || ruch[2] != '-') {
         cout << "Nieprawidlowy format. Poprawny format: D4-D2\n";
         return false;
@@ -42,57 +42,54 @@ bool czypoprawnedane(char ruch[]) //funkcja sprawdzająca poprawność wprowadza
     endkol = toupper(endkol);
 
     if (startkol < 'A' || startkol > 'D' || endkol < 'A' || endkol > 'D') {
-        cout << "Nieprawidlowa kolumna. Kolumny musza byc od A do D.\n";
+        cout << "Nieprawidlowa kolumna.\n";
         return false;
     }
 
     if (startrow < 1 || startrow > 4 || endrow < 1 || endrow > 4) {
-        cout << "Nieprawidlowy wiersz. Wiersze musza byc od 1 do 4.\n";
+        cout << "Nieprawidlowy wiersz.\n";
         return false;
     }
 
     if (startkol == endkol && startrow == endrow) {
-        cout << "Pozycja startowa i docelowa nie moga byc takie same.\n";
+        cout << "zly ruch\n";
         return false;
     }
     return true;
 }
 
-bool CzyPionekNalezy(char plansza[4][4], int startkol, int startrow)
+bool czynalezy(char plansza[4][4], int startkol, int startrow)
 {
     char polestartowe = plansza[startrow - 1][startkol - 1];
-    if (polestartowe != 'c')
+    if (polestartowe != 'b')
     {
-        cout << "Ten pionek nie nalezy do ciebie" << endl;
         return false;
     }
     return true;
 }
 
-bool ZrobRuch(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
+bool czypoledocelowepuste (char plansza[4][4], int endkol,int endrow)
 {
-    if (!CzyPionekNalezy(plansza, startkol, startrow))
-    {
-        return false;
-    }
-    
     if (plansza[endrow - 1][endkol - 1] != ' ')
     {
-        cout << "pole docelowe nie jest puste" << endl;
         return false;
     }
-
+    return true;
+}
+bool czyruchpoprzekatnej(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
+{
     if (!(startkol == endkol || startrow == endrow))
     {
-        cout << "Nie mozna poruszac sie po przekatnej" << endl;
         return false;
     }
-
-    if (plansza[startrow-2][startkol-1] == 'c')
+    return true;
+}
+bool czydaleki(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
+{
+    if (plansza[startrow-2][startkol-1] == 'b')
     {
         if (abs(startkol - endkol) > 1 || abs(startrow - endrow) != 2)
         {
-            cout << "ruch jest zbyt daleki" << endl;
             return false;
         }
         else
@@ -100,13 +97,31 @@ bool ZrobRuch(char plansza[4][4], int startkol, int startrow, int endkol, int en
             return true;
         }
     }
-    
     if (abs(startkol - endkol) > 1 || abs(startrow - endrow) > 1)
     {
-        cout << "ruch jest zbyt daleki"<< endl;
         return false;
     }
+    return true;
+}
 
+bool wykonajruch(char plansza[4][4], int startkol, int startrow, int endkol, int endrow) //funkcja odpowiadajaca za wykonanie ruchu
+{
+    if (!czynalezy(plansza, startkol, startrow))
+    {
+        return false;
+    }
+    if (!czypoledocelowepuste(plansza, endkol, endrow))
+    {
+        return false;
+    }
+    if (!czyruchpoprzekatnej(plansza, startkol, startrow, endkol, endrow))
+    {
+        return false;
+    }
+    if (!czydaleki(plansza, startkol, startrow, endkol, endrow))
+    {
+        return false;
+    }
     return true;
 }
 
@@ -114,17 +129,17 @@ int main()
 {
     // dwuwymiarowa tablica znaków - predefiniowana ponieważ na starcie gry pionki są zawsze ustawione tak samo 
     char plansza[4][4] = {
-        {'b', 'b', 'b', 'b'},
+        {'c', 'c', 'c', 'c'},
         {' ', ' ', ' ', ' '},
         {' ', ' ', ' ', ' '},
-        {'c', 'c', 'c', 'c'}
+        {'b', 'b', 'b', 'b'}
         };
     
      char ruch[6]; // tablica znaków do formatu ruchu
 
     while (true) {
         wyswietlplan(plansza);
-        cout << "Twoj ruch (format: kolumna wiersz kolumna wiersz, np. A1-A2): ";
+        cout << "Twoj ruch (format: A1-A2): ";
         cin >> ruch;
         if (czypoprawnedane(ruch)) 
         {
@@ -138,10 +153,14 @@ int main()
             startrow = 4 - startrow;
             endrow = 4 - endrow;
 
-            if (ZrobRuch(plansza, startkol, startrow, endkol, endrow)) 
+            if (wykonajruch(plansza, startkol, startrow, endkol, endrow)) 
             {
                 plansza[startrow - 1][startkol - 1] = ' ';
-                plansza[endrow - 1][endkol - 1] = 'c'; 
+                plansza[endrow - 1][endkol - 1] = 'b'; 
+            }
+            else
+            {
+                cout << "nie mozna wykonac takiego ruchu" << endl;
             }
 
         }
