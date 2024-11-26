@@ -88,7 +88,7 @@ bool czypoprawnedane(char ruch[]) //funkcja sprawdzająca poprawność wprowadza
     return true;
 }
 
-bool poprawnoscruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow) //funkcja sprawdzająca poprawnosc ruchu
+bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow) //funkcja sprawdzająca poprawnosc ruchu
 {
     char polestartowe = plansza[startrow][startkol];
     if (polestartowe != 'b')
@@ -118,10 +118,74 @@ bool poprawnoscruchu(char plansza[4][4], int startkol, int startrow, int endkol,
     return true;
 }
 
-void zrobruch(char plansza[4][4], char ruch[], char grajacy, char patrzacy, Ruch r)
+bool popbicia(char plansza[4][4], Ruch r, char grajacy, char patrzacy)
 {
+    if (r.startkol != r.endkol && r.startrow != r.endrow)
+    {
+        return false;
+    }
 
-    if (poprawnoscruchu(plansza, r.startkol, r.startrow, r.endkol, r.endrow)) 
+    if (r.startkol == r.endkol)
+    {
+        if (plansza[r.startrow+1][r.startkol] == grajacy && plansza[r.startrow+3][r.startkol] == patrzacy && plansza[r.endrow][r.endkol] == ' ')
+        {
+            return true;
+        }
+        else if (plansza[r.startrow-1][r.startkol] == grajacy && plansza[r.startrow-3][r.startkol] == patrzacy && plansza[r.endrow][r.endkol] == ' ')
+        {
+            return true;
+        }  
+        
+    }
+    if (r.startrow == r.endrow)
+    {
+        if (plansza[r.startrow][r.startkol+1] == grajacy && plansza[r.startrow][r.startkol+3] == patrzacy && plansza[r.endrow][r.endkol] == ' ')
+        {
+            return true;
+        }
+        else if (plansza[r.startrow][r.startkol-1] == grajacy && plansza[r.startrow][r.startkol-3] == patrzacy && plansza[r.endrow][r.endkol] == ' ')
+        {
+            return true;
+        }
+    }
+    return false;
+
+}
+
+void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
+{
+    if (popbicia(plansza, r, grajacy, patrzacy))
+    {
+        if (r.startkol == r.endkol)
+        {
+            if (r.startrow > r.endrow)
+            {
+                plansza[r.startrow-3][r.startkol] = ' ';
+            }
+            if (r.startrow < r.endrow)
+            {
+                plansza[r.startrow+3][r.startkol] = ' ';
+            }
+        }
+        else if (r.startrow == r.endrow)
+        {
+            if (r.startkol > r.endkol)
+            {
+                plansza[r.startrow][r.startkol-3] = ' ';
+            }
+            if (r.startkol < r.endkol)
+            {
+                plansza[r.startrow][r.startkol+3] = ' ';
+            }
+        }
+
+        plansza[r.startrow][r.startkol] = ' ';
+        plansza[r.endrow][r.endkol] = grajacy;     
+        
+    }
+    
+
+    else if (popruchu(plansza, r.startkol, r.startrow, r.endkol, r.endrow)) 
     {
         plansza[r.startrow][r.startkol] = ' ';
         plansza[r.endrow][r.endkol] = 'b'; 
@@ -156,7 +220,7 @@ int main()
         if (czypoprawnedane(ruch)) 
         {
             Ruch r = zamieninput(ruch);
-            zrobruch(plansza, ruch, 'b', 'c', r);
+            zrobruch(plansza, 'b', 'c', r);
         }
 
     }
