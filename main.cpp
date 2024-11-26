@@ -88,73 +88,33 @@ bool czypoprawnedane(char ruch[]) //funkcja sprawdzająca poprawność wprowadza
     return true;
 }
 
-bool czynalezy(char plansza[4][4], int startkol, int startrow)
+bool poprawnoscruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow) //funkcja sprawdzająca poprawnosc ruchu
 {
     char polestartowe = plansza[startrow][startkol];
     if (polestartowe != 'b')
     {
         return false;
     }
-    return true;
-}
 
-bool czypoledocelowepuste (char plansza[4][4], int endkol,int endrow)
-{
     if (plansza[endrow][endkol] != ' ')
     {
         return false;
     }
-    return true;
-}
-bool czyruchpoprzekatnej(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
-{
+
     if (!(startkol == endkol || startrow == endrow))
     {
         return false;
     }
-    return true;
-}
-bool czydaleki(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
-{
     if (abs(startkol - endkol) > 1 || abs(startrow - endrow) > 1)
     {
         return false;
     }
-    return true;
-}
-bool tensam(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
-{
     if (startkol == endkol && startrow == endrow) 
     {
-        cout << "zly ruch\n";
+        cout << "zly ruch" << endl;
         return false;
     }
-    return true;
-}
 
-bool poprawnoscruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow) //funkcja sprawdzająca poprawnosc ruchu
-{
-    if (!czynalezy(plansza, startkol, startrow))
-    {
-        return false;
-    }
-    if (!czypoledocelowepuste(plansza, endkol, endrow))
-    {
-        return false;
-    }
-    if (!czyruchpoprzekatnej(plansza, startkol, startrow, endkol, endrow))
-    {
-        return false;
-    }
-    if (!czydaleki(plansza, startkol, startrow, endkol, endrow))
-    {
-        return false;
-    }
-    if (!tensam(plansza, startkol, startrow, endkol, endrow))
-    {
-        return false;
-    }
-    
     return true;
 }
 
