@@ -422,7 +422,6 @@ int main()
             Ruch r = zamieninput(ruch);
             if (zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r))
                 {
-                    zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
                     zmianatury(gracz1, gracz2);
                 }
             }
