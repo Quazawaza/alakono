@@ -23,7 +23,7 @@ void Starter(char gracz1[], char gracz2[])
 
 }
 
-void wyswietlplan(char plansza[4][4], char gracz1[], char gracz2[]) //funkcja rysująca plansze
+void wyswietlplan(char plansza[4][4], char gracz1[], char gracz2[])
 {
     int row = 4;
     cout << gracz1 << " (b)" << endl;
@@ -57,10 +57,10 @@ Ruch zamieninput(char ruch[])
     return rch;
 }
 
-bool czypoprawnedane(char ruch[]) //funkcja sprawdzająca poprawność wprowadzanych danych 
+bool czypoprawnedane(char ruch[])
 {
     int i = 0;
-    while (ruch[i] != '\0') i++;  // sprawdzanie długości wprowadzonego ciagu znaków
+    while (ruch[i] != '\0') i++;
     if (i != 5 || ruch[2] != '-') {
         cout << "Nieprawidlowy format." << endl;
         return false;
@@ -88,7 +88,7 @@ bool czypoprawnedane(char ruch[]) //funkcja sprawdzająca poprawność wprowadza
     return true;
 }
 
-bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow) //funkcja sprawdzająca poprawnosc ruchu
+bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
 {
     char polestartowe = plansza[startrow][startkol];
     if (polestartowe != 'b')
@@ -199,7 +199,6 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
 
 int main()
 {
-    // dwuwymiarowa tablica znaków - predefiniowana ponieważ na starcie gry pionki są zawsze ustawione tak samo 
     char plansza[4][4] = {
         {'c', 'c', 'c', 'c'},
         {' ', ' ', ' ', ' '},
@@ -207,7 +206,7 @@ int main()
         {'b', 'b', 'b', 'b'}
         };
     
-     char ruch[6]; // tablica znaków do formatu ruchu
+     char ruch[6];
 
      char gracz1[30];
      char gracz2[30];
