@@ -1,5 +1,6 @@
 // Tomasz Ciurkowski 203191 Elektronika i telekomunikacja Gra a la Kono (na motywach koreańskiej gry Kono)
 #include <iostream>
+#include <ctime>
 
 using namespace std;
 
@@ -20,15 +21,15 @@ struct Ruch
 
 void Starter(Gracz &gracz1, Gracz &gracz2)
 {
-    cout << "wprowadz imie gracza 1 (pionki czarne): ";
+    cout << "wprowadz imie gracza 1 (pionki biale): ";
     cin >> gracz1.imie;
     cout << endl;
-    gracz1.pionki = 'c';
+    gracz1.pionki = 'b';
     gracz1.aktywny = true;
-    cout << "wprowadz ime gracza 2 (pionki biale): ";
+    cout << "wprowadz ime gracza 2 (pionki czarne): ";
     cin >> gracz2.imie;
     cout << endl;
-    gracz2.pionki = 'b';
+    gracz2.pionki = 'c';
     gracz2.aktywny = false;
 
 }
@@ -36,7 +37,7 @@ void Starter(Gracz &gracz1, Gracz &gracz2)
 void wyswietlplan(char plansza[4][4], Gracz &gracz1, Gracz &gracz2)
 {
     int row = 4;
-    cout << gracz1.imie << " pionki: " << gracz1.pionki << endl;
+    cout << gracz2.imie << " pionki: " << gracz2.pionki << endl;
     cout << " \xc9\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xbb" << endl;
     for (int i = 0; i < 4; i++)
     {
@@ -54,7 +55,7 @@ void wyswietlplan(char plansza[4][4], Gracz &gracz1, Gracz &gracz2)
     }
     cout << " \xc8\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xbc" << endl;
     cout << "   A   B   C   D"<< endl;
-    cout << gracz2.imie<< " pionki: " << gracz2.pionki<< endl;
+    cout << gracz1.imie<< " pionki: " << gracz1.pionki<< endl;
 }
 
 Ruch zamieninput(char ruch[])
@@ -306,6 +307,66 @@ void zmianatury(Gracz &gracz1, Gracz &gracz2)
     
 }
 
+int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[16])
+{
+    int liczbarochow;
+    liczbarochow = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (plansza[i][j] == grajacy)
+            {
+                for (int k = -1 ; k < 1; k++)
+                {
+                    for (int l = -1; l < 1; l++)
+                    {
+                        int endkol;
+                        int endrow;
+                        endkol = j + k;
+                        endrow = i+l;
+                        if (endkol >= 0 && endkol < 4 && endrow >= 0 && endrow < 4)
+                        {
+                            if (popruchu(plansza, j, i, endkol, endrow, grajacy))
+                            {
+                                ruchy[liczbarochow].startkol=j;
+                                ruchy[liczbarochow].startrow=i;
+                                ruchy[liczbarochow].endkol = endkol;
+                                ruchy[liczbarochow].endrow = endrow;
+                                liczbarochow++;
+                            }
+                            
+                        }
+                        
+                    }
+
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    return liczbarochow;
+    
+}
+
+Ruch AutoRuch(char plansza[4][4], char grajacy)
+{
+    Ruch ruchy[16];
+    int liczbarochow;
+    liczbarochow = GenRuchy(plansza, grajacy, ruchy);
+
+    srand(time(0));
+    int index = rand()%liczbarochow;
+
+    Ruch r;
+    r = ruchy[index];
+
+    return r;
+}
+
 int main()
 {
     char plansza[4][4] = {
@@ -340,21 +401,24 @@ int main()
         }
         if (gracz1.aktywny)
         {
-            cout << "Ruch gracza: " << gracz1.imie << " pionki: " << gracz1.pionki << endl;
+            cout << "Ruch gracza: " << gracz1.imie << " pionki: " << gracz1.pionki << " gracz wykonuje ruch automatycznie"<< endl;
+            Ruch r = AutoRuch(plansza, grajacy->pionki);
+            zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
+            zmianatury(gracz1, gracz2);
         }
         else
         {
             cout << "Ruch gracza: " << gracz2.imie << " pionki: " << gracz2.pionki << endl;
-        }
-        cout << "wprowadz ruch: ";
-    
-        cin >> ruch;
-        if (czypoprawnedane(ruch)) 
-        {
+            cout << "wprowadz ruch: ";
+            cin >> ruch;
+            if (czypoprawnedane(ruch)) 
+            {
             Ruch r = zamieninput(ruch);
             zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
             zmianatury(gracz1, gracz2);
+            }
         }
+        
         
     }
 
