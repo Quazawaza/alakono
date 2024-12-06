@@ -167,6 +167,7 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
             {
                 plansza[r.startrow+3][r.startkol] = ' ';
             }
+            plansza[r.endrow+1][r.endkol] = grajacy; 
         }
         else if (r.startrow == r.endrow)
         {
@@ -178,10 +179,9 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
             {
                 plansza[r.startrow][r.startkol+3] = ' ';
             }
+            plansza[r.endrow][r.endkol+1] = grajacy; 
         }
-
         plansza[r.startrow][r.startkol] = ' ';
-        plansza[r.endrow+1][r.endkol] = grajacy;     
         
     }
     
@@ -196,6 +196,88 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
         cout << "nie mozna wykonac takiego ruchu" << endl;
     }
 
+}
+
+bool blokadaprzeciw(char plansza[4][4], char patrzacy, char grajacy)
+{
+    int iloscpionprzeciw;
+    iloscpionprzeciw = 0;
+    int otoczony;
+    otoczony = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+
+            if (plansza[i][j] == patrzacy)
+            {
+                iloscpionprzeciw++;
+                bool dol;
+                bool gora;
+                bool prawo;
+                bool lewo;
+                if (i + 1 < 4)
+                {
+                    dol = plansza[i + 1][j] != ' ';
+                }
+                else
+                {
+                    dol = true;
+                }
+                if (i - 1 >= 0)
+                {
+                    gora = plansza[i - 1][j] != ' ';
+                }
+                else
+                {
+                    gora = true;
+                }
+                if (j + 1 < 4)
+                {
+                    prawo = plansza[i][j + 1] != ' ';
+                }
+                else
+                {
+                    prawo = true;
+                }
+                if (j - 1 >= 0)
+                {
+                    lewo = plansza[i][j - 1] != ' ';
+                }
+                else
+                {
+                    lewo = true;
+                }
+
+                if (dol && gora && prawo && lewo) 
+                {
+                    otoczony++;
+                }
+            }
+            
+        } 
+    }
+    if (iloscpionprzeciw == otoczony) {
+        return true;
+    }
+    return false;
+    
+}
+
+bool brakpionkow(char plansza[4][4], char patrzacy)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (plansza[i][j] == patrzacy)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+    
 }
 
 int main()
@@ -215,6 +297,12 @@ int main()
      Starter(gracz1, gracz2);
     while (true) {
         wyswietlplan(plansza, gracz1, gracz2);
+        if (brakpionkow(plansza, 'b') || blokadaprzeciw(plansza, 'b', 'c'))
+        {
+            cout << "wygrywa gracz: " << gracz2 << endl;
+            break;
+        }
+        
         cout << "Twoj ruch (format: A1-A2): ";
         cin >> ruch;
         if (czypoprawnedane(ruch)) 
