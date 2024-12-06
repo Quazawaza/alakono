@@ -195,10 +195,11 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
     {
         cout << "nie mozna wykonac takiego ruchu" << endl;
     }
+    zmianatury(grajacy, patrzacy);
 
 }
 
-bool blokadaprzeciw(char plansza[4][4], char patrzacy, char grajacy)
+bool blokadaprzeciw(char plansza[4][4], char patrzacy)
 {
     int iloscpionprzeciw;
     iloscpionprzeciw = 0;
@@ -280,6 +281,21 @@ bool brakpionkow(char plansza[4][4], char patrzacy)
     
 }
 
+void zmianatury(char &grajacy, char &patrzacy)
+{
+    if (grajacy == 'c')
+    {
+        grajacy = 'b';
+        patrzacy = 'c';
+    }
+    else
+    {
+        grajacy = 'c';
+        patrzacy = 'b';
+    }
+    
+}
+
 int main()
 {
     char plansza[4][4] = {
@@ -289,17 +305,21 @@ int main()
         {'b', 'b', 'b', 'b'}
         };
     
-     char ruch[6];
+    char ruch[6];
 
-     char gracz1[30];
-     char gracz2[30];
+    char gracz1[30];
+    char gracz2[30];
+    char patrzacy;
+    char grajacy;
+    grajacy = 'c';
+    patrzacy = 'b';
 
-     Starter(gracz1, gracz2);
+    Starter(gracz1, gracz2);
     while (true) {
         wyswietlplan(plansza, gracz1, gracz2);
-        if (brakpionkow(plansza, 'b') || blokadaprzeciw(plansza, 'b', 'c'))
+        if (brakpionkow(plansza, patrzacy) || blokadaprzeciw(plansza, patrzacy))
         {
-            cout << "wygrywa gracz: " << gracz2 << endl;
+            cout << "wygrywa gracz: " << grajacy << endl;
             break;
         }
         
@@ -308,9 +328,9 @@ int main()
         if (czypoprawnedane(ruch)) 
         {
             Ruch r = zamieninput(ruch);
-            zrobruch(plansza, 'c', 'b', r);
+            zrobruch(plansza, grajacy, patrzacy, r);
         }
-
+        
     }
 
     return 0;
