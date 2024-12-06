@@ -26,7 +26,7 @@ void Starter(char gracz1[], char gracz2[])
 void wyswietlplan(char plansza[4][4], char gracz1[], char gracz2[])
 {
     int row = 4;
-    cout << gracz1 << " (b)" << endl;
+    cout << gracz2 << " (c)" << endl;
     cout << " \xc9\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xbb" << endl;
     for (int i = 0; i < 4; i++)
     {
@@ -44,7 +44,7 @@ void wyswietlplan(char plansza[4][4], char gracz1[], char gracz2[])
     }
     cout << " \xc8\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xbc" << endl;
     cout << "   A   B   C   D"<< endl;
-    cout << gracz2 << " (c)"<< endl;
+    cout << gracz1 << " (b)"<< endl;
 }
 
 Ruch zamieninput(char ruch[])
@@ -88,10 +88,11 @@ bool czypoprawnedane(char ruch[])
     return true;
 }
 
-bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow)
+bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow , char grajacy) //funkcja sprawdzająca poprawnosc ruchu
+
 {
     char polestartowe = plansza[startrow][startkol];
-    if (polestartowe != 'b')
+    if (polestartowe != grajacy)
     {
         return false;
     }
@@ -180,15 +181,15 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
         }
 
         plansza[r.startrow][r.startkol] = ' ';
-        plansza[r.endrow][r.endkol] = grajacy;     
+        plansza[r.endrow+1][r.endkol] = grajacy;     
         
     }
     
 
-    else if (popruchu(plansza, r.startkol, r.startrow, r.endkol, r.endrow)) 
+    else if (popruchu(plansza, r.startkol, r.startrow, r.endkol, r.endrow, grajacy)) 
     {
         plansza[r.startrow][r.startkol] = ' ';
-        plansza[r.endrow][r.endkol] = 'b'; 
+        plansza[r.endrow][r.endkol] = grajacy; 
     }
     else
     {
@@ -219,7 +220,7 @@ int main()
         if (czypoprawnedane(ruch)) 
         {
             Ruch r = zamieninput(ruch);
-            zrobruch(plansza, 'b', 'c', r);
+            zrobruch(plansza, 'c', 'b', r);
         }
 
     }
