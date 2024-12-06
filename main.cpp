@@ -172,24 +172,26 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
             if (r.startrow > r.endrow)
             {
                 plansza[r.startrow-3][r.startkol] = ' ';
+                plansza[r.endrow-1][r.endkol] = grajacy; 
             }
             if (r.startrow < r.endrow)
             {
                 plansza[r.startrow+3][r.startkol] = ' ';
+                plansza[r.endrow+1][r.endkol] = grajacy; 
             }
-            plansza[r.endrow+1][r.endkol] = grajacy; 
         }
         else if (r.startrow == r.endrow)
         {
             if (r.startkol > r.endkol)
             {
                 plansza[r.startrow][r.startkol-3] = ' ';
+                plansza[r.endrow][r.endkol-1] = grajacy; 
             }
             if (r.startkol < r.endkol)
             {
                 plansza[r.startrow][r.startkol+3] = ' ';
+                plansza[r.endrow][r.endkol+1] = grajacy; 
             }
-            plansza[r.endrow][r.endkol+1] = grajacy; 
         }
         plansza[r.startrow][r.startkol] = ' ';
         
@@ -289,17 +291,17 @@ bool brakpionkow(char plansza[4][4], char patrzacy)
     return true;
     
 }
-void zmianatury(char &grajacy, char &patrzacy)
+void zmianatury(Gracz &gracz1, Gracz &gracz2)
 {
-    if (grajacy == 'c')
+    if (gracz1.aktywny)
     {
-        grajacy = 'b';
-        patrzacy = 'c';
+        gracz1.aktywny = false;
+        gracz2.aktywny = true;
     }
     else
     {
-        grajacy = 'c';
-        patrzacy = 'b';
+        gracz1.aktywny = true;
+        gracz2.aktywny = false;
     }
     
 }
@@ -315,30 +317,43 @@ int main()
     
     char ruch[6];
 
-    char patrzacy;
-    char grajacy;
-    grajacy = 'c';
-    patrzacy = 'b';
-
     Gracz gracz1;
     Gracz gracz2;
+
+    Gracz* grajacy;
+    Gracz* patrzacy;
 
     Starter(gracz1, gracz2);
     while (true) {
         wyswietlplan(plansza, gracz1, gracz2);
-        if (brakpionkow(plansza, patrzacy) || blokadaprzeciw(plansza, patrzacy))
+        if (gracz1.aktywny) {
+            grajacy = &gracz1;
+            patrzacy = &gracz2;
+        } else {
+            grajacy = &gracz2;
+            patrzacy = &gracz1;
+        }
+        if (brakpionkow(plansza, grajacy->pionki) || blokadaprzeciw(plansza, grajacy->pionki))
         {
-            cout << "wygrywa gracz: " << grajacy << endl;
+            cout << "wygrywa gracz: " << patrzacy->imie << endl;
             break;
         }
-        
-        cout << "Ruch gracza: " << grajacy << endl <<" wprowadz ruch: ";
+        if (gracz1.aktywny)
+        {
+            cout << "Ruch gracza: " << gracz1.imie << " pionki: " << gracz1.pionki << endl;
+        }
+        else
+        {
+            cout << "Ruch gracza: " << gracz2.imie << " pionki: " << gracz2.pionki << endl;
+        }
+        cout << "wprowadz ruch: ";
+    
         cin >> ruch;
         if (czypoprawnedane(ruch)) 
         {
             Ruch r = zamieninput(ruch);
-            zrobruch(plansza, grajacy, patrzacy, r);
-            zmianatury(grajacy, patrzacy);
+            zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
+            zmianatury(gracz1, gracz2);
         }
         
     }
