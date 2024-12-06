@@ -3,6 +3,13 @@
 
 using namespace std;
 
+struct Gracz
+{
+    char imie[30];
+    char pionki;
+    bool aktywny;
+};
+
 struct Ruch
 {
     int startkol;
@@ -11,22 +18,25 @@ struct Ruch
     int endrow;
 };
 
-void Starter(char gracz1[], char gracz2[])
+void Starter(Gracz &gracz1, Gracz &gracz2)
 {
     cout << "wprowadz imie gracza 1 (pionki czarne): ";
-    cin >> gracz1;
+    cin >> gracz1.imie;
     cout << endl;
-
+    gracz1.pionki = 'c';
+    gracz1.aktywny = true;
     cout << "wprowadz ime gracza 2 (pionki biale): ";
-    cin >> gracz2;
+    cin >> gracz2.imie;
     cout << endl;
+    gracz2.pionki = 'b';
+    gracz2.aktywny = false;
 
 }
 
-void wyswietlplan(char plansza[4][4], char gracz1[], char gracz2[])
+void wyswietlplan(char plansza[4][4], Gracz &gracz1, Gracz &gracz2)
 {
     int row = 4;
-    cout << gracz2 << " (c)" << endl;
+    cout << gracz1.imie << " pionki: " << gracz1.pionki << endl;
     cout << " \xc9\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xcb\xcd\xcd\xcd\xbb" << endl;
     for (int i = 0; i < 4; i++)
     {
@@ -44,7 +54,7 @@ void wyswietlplan(char plansza[4][4], char gracz1[], char gracz2[])
     }
     cout << " \xc8\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xca\xcd\xcd\xcd\xbc" << endl;
     cout << "   A   B   C   D"<< endl;
-    cout << gracz1 << " (b)"<< endl;
+    cout << gracz2.imie<< " pionki: " << gracz2.pionki<< endl;
 }
 
 Ruch zamieninput(char ruch[])
@@ -88,7 +98,7 @@ bool czypoprawnedane(char ruch[])
     return true;
 }
 
-bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow , char grajacy) //funkcja sprawdzająca poprawnosc ruchu
+bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow , char grajacy) 
 
 {
     char polestartowe = plansza[startrow][startkol];
@@ -195,7 +205,6 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
     {
         cout << "nie mozna wykonac takiego ruchu" << endl;
     }
-    zmianatury(grajacy, patrzacy);
 
 }
 
@@ -280,7 +289,6 @@ bool brakpionkow(char plansza[4][4], char patrzacy)
     return true;
     
 }
-
 void zmianatury(char &grajacy, char &patrzacy)
 {
     if (grajacy == 'c')
@@ -307,12 +315,13 @@ int main()
     
     char ruch[6];
 
-    char gracz1[30];
-    char gracz2[30];
     char patrzacy;
     char grajacy;
     grajacy = 'c';
     patrzacy = 'b';
+
+    Gracz gracz1;
+    Gracz gracz2;
 
     Starter(gracz1, gracz2);
     while (true) {
@@ -323,12 +332,13 @@ int main()
             break;
         }
         
-        cout << "Twoj ruch (format: A1-A2): ";
+        cout << "Ruch gracza: " << grajacy << endl <<" wprowadz ruch: ";
         cin >> ruch;
         if (czypoprawnedane(ruch)) 
         {
             Ruch r = zamieninput(ruch);
             zrobruch(plansza, grajacy, patrzacy, r);
+            zmianatury(grajacy, patrzacy);
         }
         
     }
