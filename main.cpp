@@ -164,7 +164,7 @@ bool popbicia(char plansza[4][4], Ruch r, char grajacy, char patrzacy)
 
 }
 
-void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
+bool zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
 {
     if (popbicia(plansza, r, grajacy, patrzacy))
     {
@@ -207,8 +207,9 @@ void zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
     else
     {
         cout << "nie mozna wykonac takiego ruchu" << endl;
+        return false;
     }
-
+    return true;
 }
 
 bool blokadaprzeciw(char plansza[4][4], char patrzacy)
@@ -330,14 +331,11 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
                         endrow = i+l;
                         if (endkol >= 0 && endkol < 4 && endrow >= 0 && endrow < 4)
                         {
-                            if (popruchu(plansza, j, i, endkol, endrow, grajacy))
-                            {
                                 ruchy[liczbarochow].startkol=j;
                                 ruchy[liczbarochow].startrow=i;
                                 ruchy[liczbarochow].endkol = endkol;
                                 ruchy[liczbarochow].endrow = endrow;
                                 liczbarochow++;
-                            }
                             
                         }
                         
@@ -406,8 +404,13 @@ int main()
         {
             cout << "Ruch gracza: " << gracz1.imie << " pionki: " << gracz1.pionki << " gracz wykonuje ruch automatycznie"<< endl;
             Ruch r = AutoRuch(plansza, grajacy->pionki);
-            zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
-            zmianatury(gracz1, gracz2);
+            if (zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r))
+                {
+                    zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
+                    zmianatury(gracz1, gracz2);
+                }
+            
+            
         }
         else
         {
@@ -417,8 +420,11 @@ int main()
             if (czypoprawnedane(ruch)) 
             {
             Ruch r = zamieninput(ruch);
-            zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
-            zmianatury(gracz1, gracz2);
+            if (zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r))
+                {
+                    zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
+                    zmianatury(gracz1, gracz2);
+                }
             }
         }
         
