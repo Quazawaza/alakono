@@ -307,7 +307,7 @@ void zmianatury(Gracz &gracz1, Gracz &gracz2)
     
 }
 
-int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[16])
+int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
 {
     int liczbarochow;
     liczbarochow = 0;
@@ -317,10 +317,13 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[16])
         {
             if (plansza[i][j] == grajacy)
             {
-                for (int k = -1 ; k < 1; k++)
+                for (int k = -2 ; k < 2; k++)
                 {
-                    for (int l = -1; l < 1; l++)
+                    for (int l = -2; l < 2; l++)
                     {
+                        if ((k == 0 && l == 0) || (abs(k) != 0 && abs(l) != 0)) {
+                            continue;
+                        }
                         int endkol;
                         int endrow;
                         endkol = j + k;
@@ -354,7 +357,7 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[16])
 
 Ruch AutoRuch(char plansza[4][4], char grajacy)
 {
-    Ruch ruchy[16];
+    Ruch ruchy[32];
     int liczbarochow;
     liczbarochow = GenRuchy(plansza, grajacy, ruchy);
 
