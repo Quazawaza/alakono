@@ -99,29 +99,29 @@ bool czypoprawnedane(char ruch[])
     return true;
 }
 
-bool popruchu(char plansza[4][4], int startkol, int startrow, int endkol, int endrow , char grajacy) 
+bool popruchu(char plansza[4][4],Ruch r, char grajacy) 
 
 {
-    char polestartowe = plansza[startrow][startkol];
+    char polestartowe = plansza[r.startrow][r.startkol];
     if (polestartowe != grajacy)
     {
         return false;
     }
 
-    if (plansza[endrow][endkol] != ' ')
+    if (plansza[r.endrow][r.endkol] != ' ')
     {
         return false;
     }
 
-    if (!(startkol == endkol || startrow == endrow))
+    if (!(r.startkol == r.endkol || r.startrow == r.endrow))
     {
         return false;
     }
-    if (abs(startkol - endkol) > 1 || abs(startrow - endrow) > 1)
+    if (abs(r.startkol - r.endkol) > 1 || abs(r.startrow - r.endrow) > 1)
     {
         return false;
     }
-    if (startkol == endkol && startrow == endrow) 
+    if (r.startkol == r.endkol && r.startrow == r.endrow) 
     {
         cout << "zly ruch" << endl;
         return false;
@@ -199,7 +199,7 @@ bool zrobruch(char plansza[4][4], char grajacy, char patrzacy, Ruch r)
     }
     
 
-    else if (popruchu(plansza, r.startkol, r.startrow, r.endkol, r.endrow, grajacy)) 
+    else if (popruchu(plansza, r, grajacy)) 
     {
         plansza[r.startrow][r.startkol] = ' ';
         plansza[r.endrow][r.endkol] = grajacy; 
@@ -318,9 +318,9 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
         {
             if (plansza[i][j] == grajacy)
             {
-                for (int k = -2 ; k < 2; k++)
+                for (int k = -1 ; k < 1; k++)
                 {
-                    for (int l = -2; l < 2; l++)
+                    for (int l = -1; l < 1; l++)
                     {
                         if ((k == 0 && l == 0) || (abs(k) != 0 && abs(l) != 0)) {
                             continue;
@@ -335,8 +335,12 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
                                 ruchy[liczbarochow].startrow=i;
                                 ruchy[liczbarochow].endkol = endkol;
                                 ruchy[liczbarochow].endrow = endrow;
-                                liczbarochow++;
-                            
+                                if (popruchu(plansza, ruchy[liczbarochow], grajacy))
+                                {
+                                     liczbarochow++;
+                                }
+                                
+                               
                         }
                         
                     }
@@ -353,19 +357,70 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
     
 }
 
-Ruch AutoRuch(char plansza[4][4], char grajacy)
+int GenRuchyBijace(char plansza[4][4], char grajacy, char patrzacy, Ruch ruchy[32])
+{
+    int liczbabic;
+    liczbabic = 0;
+
+    for (int i = 0; i < 4; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            if (plansza[i][j] == grajacy)
+            {
+                for (int k = -2; k < 2; k++)
+                {
+                    for (int l = -2; l < 2; l++)
+                    {
+                        if ((k == 0 && l == 0) || (abs(k) != 0 && abs(l) != 0)) 
+                        {
+                            continue;
+                        }
+                        int endkol;
+                        int endrow;
+                        endkol= j + k;
+                        endrow = i + l;
+                        if (endkol >= 0 && endkol < 4 && endrow >= 0 && endrow < 4)
+                        {
+                            ruchy[liczbabic].startkol = j;
+                            ruchy[liczbabic].startrow = i;
+                            ruchy[liczbabic].endkol = endkol;
+                            ruchy[liczbabic].endrow = endrow;
+
+                            if (popbicia(plansza, ruchy[liczbabic],grajacy, patrzacy)) 
+                            {
+                                liczbabic++;
+                            }
+                        }
+                    }
+                    
+                }
+                
+            }
+            
+        }
+
+    }
+    return liczbabic;
+}
+
+Ruch AutoRuch(char plansza[4][4], char grajacy, char patrzacy)
 {
     Ruch ruchy[32];
     int liczbarochow;
+    int liczbabic;
+    int index;
     liczbarochow = GenRuchy(plansza, grajacy, ruchy);
-
+    liczbabic = GenRuchyBijace(plansza, grajacy, patrzacy, ruchy);
+    if (liczbabic > 0)
+    {
+        srand(time(0));
+        index = rand()%liczbabic;
+        return ruchy[index];
+    }
     srand(time(0));
-    int index = rand()%liczbarochow;
-
-    Ruch r;
-    r = ruchy[index];
-
-    return r;
+    index = rand()%liczbarochow;
+    return ruchy[index];
 }
 
 int main()
@@ -403,7 +458,7 @@ int main()
         if (gracz1.aktywny)
         {
             cout << "Ruch gracza: " << gracz1.imie << " pionki: " << gracz1.pionki << " gracz wykonuje ruch automatycznie"<< endl;
-            Ruch r = AutoRuch(plansza, grajacy->pionki);
+            Ruch r = AutoRuch(plansza, grajacy->pionki, patrzacy->pionki);
             if (zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r))
                 {
                     zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
