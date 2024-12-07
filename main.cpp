@@ -308,7 +308,7 @@ void zmianatury(Gracz &gracz1, Gracz &gracz2)
     
 }
 
-int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
+int GenRuchy(char plansza[4][4], char grajacy, Ruch (&ruchy)[32])
 {
     int liczbarochow;
     liczbarochow = 0;
@@ -327,19 +327,23 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
                         }
                         int endkol;
                         int endrow;
-                        endkol = j + k;
-                        endrow = i+l;
+                        endkol = j + l;
+                        endrow = i+k;
                         if (endkol >= 0 && endkol < 4 && endrow >= 0 && endrow < 4)
                         {
-                                ruchy[liczbarochow].startkol=j;
-                                ruchy[liczbarochow].startrow=i;
-                                ruchy[liczbarochow].endkol = endkol;
-                                ruchy[liczbarochow].endrow = endrow;
-                                if (popruchu(plansza, ruchy[liczbarochow], grajacy))
-                                {
-                                     liczbarochow++;
-                                }
-                                
+                            Ruch *pomruch = new Ruch;
+
+                            pomruch->startkol = j;
+                            pomruch->startrow = i;
+                            pomruch->endkol = endkol;
+                            pomruch->endrow = endrow;
+                            if (popruchu(plansza, *pomruch, grajacy))
+                            {
+                                ruchy[liczbarochow] = *pomruch;
+                                liczbarochow++;
+                            }
+
+                            delete pomruch;
                                
                         }
                         
@@ -357,7 +361,7 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
     
 }
 
-int GenRuchyBijace(char plansza[4][4], char grajacy, char patrzacy, Ruch ruchy[32])
+int GenRuchyBijace(char plansza[4][4], char grajacy, char patrzacy, Ruch (&ruchy)[32])
 {
     int liczbabic;
     liczbabic = 0;
@@ -382,15 +386,20 @@ int GenRuchyBijace(char plansza[4][4], char grajacy, char patrzacy, Ruch ruchy[3
                         endrow = i + l;
                         if (endkol >= 0 && endkol < 4 && endrow >= 0 && endrow < 4)
                         {
-                            ruchy[liczbabic].startkol = j;
-                            ruchy[liczbabic].startrow = i;
-                            ruchy[liczbabic].endkol = endkol;
-                            ruchy[liczbabic].endrow = endrow;
+                            Ruch *pomruch = new Ruch;
 
-                            if (popbicia(plansza, ruchy[liczbabic],grajacy, patrzacy)) 
+                            pomruch->startkol = j;
+                            pomruch->startrow = i;
+                            pomruch->endkol = endkol;
+                            pomruch->endrow = endrow;
+
+                            if (popbicia(plansza, *pomruch,grajacy, patrzacy)) 
                             {
+                                ruchy[liczbabic] = *pomruch;
                                 liczbabic++;
                             }
+
+                            delete pomruch;
                         }
                     }
                     
@@ -426,10 +435,10 @@ Ruch AutoRuch(char plansza[4][4], char grajacy, char patrzacy)
 int main()
 {
     char plansza[4][4] = {
-        {'c', 'c', 'c', 'c'},
+        {'c', 'b', 'c', ' '},
         {' ', ' ', ' ', ' '},
-        {' ', ' ', ' ', ' '},
-        {'b', 'b', 'b', 'b'}
+        {' ', 'c', ' ', 'c'},
+        {' ', ' ', ' ', ' '}
         };
     
     char ruch[6];
@@ -461,7 +470,6 @@ int main()
             Ruch r = AutoRuch(plansza, grajacy->pionki, patrzacy->pionki);
             if (zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r))
                 {
-                    zrobruch(plansza, grajacy->pionki, patrzacy->pionki, r);
                     zmianatury(gracz1, gracz2);
                 }
             
