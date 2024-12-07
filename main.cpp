@@ -435,12 +435,12 @@ Ruch AutoRuch(char plansza[4][4], char grajacy, char patrzacy)
 int main()
 {
     char plansza[4][4] = {
-        {'c', 'b', 'c', ' '},
+        {'c', 'c', 'c', 'c'},
         {' ', ' ', ' ', ' '},
-        {' ', 'c', ' ', 'c'},
-        {' ', ' ', ' ', ' '}
+        {' ', ' ', ' ', ' '},
+        {'b', 'b', 'b', 'b'}
         };
-    
+
     char ruch[6];
 
     Gracz gracz1;
