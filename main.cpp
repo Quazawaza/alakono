@@ -318,9 +318,9 @@ int GenRuchy(char plansza[4][4], char grajacy, Ruch ruchy[32])
         {
             if (plansza[i][j] == grajacy)
             {
-                for (int k = -1 ; k < 1; k++)
+                for (int k = -1 ; k <= 1; k++)
                 {
-                    for (int l = -1; l < 1; l++)
+                    for (int l = -1; l <= 1; l++)
                     {
                         if ((k == 0 && l == 0) || (abs(k) != 0 && abs(l) != 0)) {
                             continue;
@@ -368,9 +368,9 @@ int GenRuchyBijace(char plansza[4][4], char grajacy, char patrzacy, Ruch ruchy[3
         {
             if (plansza[i][j] == grajacy)
             {
-                for (int k = -2; k < 2; k++)
+                for (int k = -2; k <= 2; k++)
                 {
-                    for (int l = -2; l < 2; l++)
+                    for (int l = -2; l <= 2; l++)
                     {
                         if ((k == 0 && l == 0) || (abs(k) != 0 && abs(l) != 0)) 
                         {
