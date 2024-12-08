@@ -6,7 +6,7 @@ using namespace std;
 
 struct Gracz
 {
-    char imie[30];
+    char imie[50];
     char pionki;
     bool aktywny;
 };
@@ -441,7 +441,7 @@ int main()
         {'b', 'b', 'b', 'b'}
         };
 
-    char ruch[6];
+    char ruch[10];
 
     Gracz gracz1;
     Gracz gracz2;
