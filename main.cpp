@@ -1,4 +1,4 @@
-// Tomasz Ciurkowski 203191 Elektronika i telekomunikacja Gra a la Kono (na motywach koreańskiej gry Kono)
+
 #include <iostream>
 #include <ctime>
 
